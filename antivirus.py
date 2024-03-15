@@ -4,20 +4,46 @@ import time
 import hashlib
 import requests
 
-API_Key="15eddf7eefd98207f0e794f6497f8bb12022bd45462a586fa5c187ff6b2b0b47"
+from colorama import Fore, Back, Style
+
+ # change your own virus total API key
+API_Key="372033812703b4ac73a07c0cd82ae06fd7a0490f0c4d4407b569730112f28b09"
 
 def scan_directory(path):
     file_lists=[]
-    for subdir,root,files in os.walk(path):
-        for file in files:
-            file_path = os.path.join(subdir, file)
-            if file_path.endswith(('.exe', '.bat', '.vbs', '.js', '.scr', '.dll', '.py', '.c++', ".deb")):
+
+    if path.endswith('/'):  
+        for subdir,root,files in os.walk(path):
+            for file in files:
+                file_path = os.path.join(subdir, file)
                 file_lists.append(file_path)
-    print("We found some files that could be viruses.")
-    print("Start scanning files....")
-    count()
-    print(file_lists)
-    scan_files(file_lists)
+
+        print("Start scanning files....")
+        count()
+        scan_files(file_lists)
+
+    else:
+        print("\nScanning... : {}".format(path))
+        file_hash = hash_file(path)
+        # print("File MD5 Hash: {}".format(file_hash))
+
+        if file_hash:
+            if check_with_virustotal(file_hash):
+                print("\n")
+                print(Fore.RED + "Malware Detected --> File name: {}".format(path))
+                print("\n")
+                print("Infected file found : {}".format(path))
+                print("\n")
+                print(Style.RESET_ALL)
+                delete_file(path)
+            else:
+                    print("\n")
+                    print("No Infected files found")
+                    print("\n")
+                    print("See You ...")
+                    print("\n")
+                    input("Press any key to exit...")
+
 
 
 def count():
@@ -25,19 +51,31 @@ def count():
         time.sleep(1)
 
 
+
 def  scan_files(file_lists):
     infected_files=[]
     for file in file_lists:
         print("\nScanning... : {}".format(file))
         file_hash = hash_file(file)
-        print("File MD5 Hash: {}".format(file_hash))
 
         if file_hash:
             if check_with_virustotal(file_hash):
-                print("Malware Detected --> File name: {}".format(f))
-                infected_files.append(f)
-    print("Infected files found : {}".format(infected_files))
-
+                print("\n")
+                print(Fore.RED +"Malware Detected --> File name: {}".format(file))
+                print(Style.RESET_ALL)  
+                infected_files.append(file)
+                print(Style.RESET_ALL)
+                
+    if len(infected_files)!=0:
+        print("\n")
+        print("Malware Files : \n")
+        for i in infected_files:    
+            print(i)
+    else:
+        print("\n")
+        print("See You ...")
+        print("\n")
+        input("Press any key to exit...")
 
 
 def hash_file(file_path):
@@ -54,18 +92,29 @@ def hash_file(file_path):
         return None
 
 
-def  check_with_virustotal(file_hash):
-    url = "https://www.virustotal.com/api/v3/files/{}".format(file_hash)
-    headers = {"x-apikey" : API_Key}
-
+def check_with_virustotal(file_hash):
+    url = f"https://www.virustotal.com/api/v3/files/{file_hash}"
+    headers = {"x-apikey": API_Key}
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
-        json_response = response.join()
-        if json_response["data"]["attributes"]["last_analysis_stats"]["malicious"] > 0:
+        json_response = response.json()
+        if json_response.get("data", {}).get("attributes", {}).get("last_analysis_stats", {}).get("malicious", 0) > 0:
             return True
     return False
 
+def delete_file(file):
+    print("\n")
+    delete_or_not = input("Would you like to delete the infected file? (y/n): ")
+    if delete_or_not.lower() == 'y':
+        if os.path.isfile(file):  
+            os.remove(file)  
+            print("File removed : {}".format(file))
+
+
+
+
+
 
 if __name__ == "__main__":
-    path = input("Enter the file path : ")
+    path =  input("Enter the file path : ")
     scan_directory(path)
