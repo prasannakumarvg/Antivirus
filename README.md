@@ -26,7 +26,7 @@ Clone the repository:
         
 Navigate to the directory:
     
-    > cd malware-scanner
+    > cd Antivirus
     > Update your VirusTotal API key in the script:
 
 Add Your VirusTotal API Key:
@@ -35,7 +35,7 @@ Add Your VirusTotal API Key:
 
 Run the script:
 
-    > python malware_scanner.py
+    > python antivirus.py
     
 Follow the on-screen instructions to scan files or directories for malware.
 
