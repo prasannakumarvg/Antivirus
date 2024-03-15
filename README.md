@@ -3,6 +3,9 @@
 
 Malware Scanner
 
+![Screenshot from 2024-03-16 07-02-39](https://github.com/prasannakumarvg/Antivirus/assets/123349921/fd1ccdbb-c6a0-4498-9921-7fa6db8d5731)
+
+
 This Python script scans files for malware using the VirusTotal API.
 
 Description
