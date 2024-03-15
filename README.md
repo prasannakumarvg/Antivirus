@@ -19,7 +19,7 @@ Usage
 
 Clone the repository:
 
-    >git clone https://github.com/your_username/malware-scanner.git
+    > git clone https://github.com/your_username/malware-scanner.git
         
 Navigate to the directory:
     
@@ -28,19 +28,19 @@ Navigate to the directory:
 
 Add Your VirusTotal API Key:
 
-    >API_Key="YOUR_API_KEY_HERE"
+    > API_Key="YOUR_API_KEY_HERE"
 
 Run the script:
 
-    >python malware_scanner.py
+    > python malware_scanner.py
     
 Follow the on-screen instructions to scan files or directories for malware.
 
 Features
 
--Scans individual files or directories.
--Displays infected files, if any.
--Provides options to delete infected files upon user confirmation.
+Scans individual files or directories.
+Displays infected files, if any.
+Provides options to delete infected files upon user confirmation.
 
 
 License
