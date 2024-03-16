@@ -6,7 +6,7 @@ import requests
 
 from colorama import Fore, Back, Style
 
- # change your own virus total API key
+ # change your own virustotal API key
 API_Key="372033812703b4ac73a07c0cd82ae06fd7a0490f0c4d4407b569730112f28b09"
 
 def scan_directory(path):
@@ -33,7 +33,6 @@ def scan_directory(path):
                 print(Fore.RED + "Malware Detected --> File name: {}".format(path))
                 print("\n")
                 print("Infected file found : {}".format(path))
-                print("\n")
                 print(Style.RESET_ALL)
                 delete_file(path)
             else:
@@ -71,6 +70,7 @@ def  scan_files(file_lists):
         print("Malware Files : \n")
         for i in infected_files:    
             print(i)
+        delete_file(infected_files)
     else:
         print("\n")
         print("See You ...")
@@ -103,12 +103,23 @@ def check_with_virustotal(file_hash):
     return False
 
 def delete_file(file):
-    print("\n")
-    delete_or_not = input("Would you like to delete the infected file? (y/n): ")
-    if delete_or_not.lower() == 'y':
-        if os.path.isfile(file):  
-            os.remove(file)  
-            print("File removed : {}".format(file))
+    if isinstance(file, list): 
+        print("\n") 
+        delete_or_not = input("Would you like to delete the infected files? (y/n): ")
+        print("\n")
+        if delete_or_not.lower() == 'y':
+            for f in file:  
+                if os.path.isfile(f): 
+                    os.remove(f) 
+                    print("File removed : {}".format(f))
+    else:
+        print("\n")
+        delete_or_not = input("Would you like to delete the infected file? (y/n): ")
+        print("\n")
+        if delete_or_not.lower() == 'y':
+            if os.path.isfile(file):  
+                os.remove(file)  
+                print("File removed : {}".format(file))
 
 
 
